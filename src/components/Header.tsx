@@ -1,9 +1,11 @@
 import { useState, useEffect, MouseEvent } from "react"
 import { cn } from "../lib/utils"
+import { useLang } from "@/lib/i18n"
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { lang, setLang, t } = useLang()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +24,14 @@ export function Header() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+  const navItems = [
+    { label: t.nav.home, href: "#hero" },
+    { label: t.nav.about, href: "#about" },
+    { label: t.nav.rooms, href: "#projects" },
+    { label: t.nav.services, href: "#services" },
+    { label: t.nav.faq, href: "#faq" },
+  ]
+
   return (
     <header
       className={cn(
@@ -33,21 +43,15 @@ export function Header() {
     >
       <nav className="container mx-auto px-6 flex items-center justify-between md:px-[24]">
         <a href="/" className="flex items-center gap-2 group" onClick={scrollToTop}>
-          <img src="/images/hously-logo.svg" alt="Пространство" width={120} height={32} className="w-auto h-6" />
+          <span className="text-white font-semibold tracking-widest text-sm uppercase">Hotel Volga</span>
         </a>
 
         <ul className="hidden md:flex items-center gap-10 text-sm tracking-wide">
-          {[
-            { label: "Главная", href: "#hero" },
-            { label: "Философия", href: "#about" },
-            { label: "Проекты", href: "#projects" },
-            { label: "Услуги", href: "#services" },
-            { label: "Вопросы", href: "#faq" },
-          ].map((item) => (
+          {navItems.map((item) => (
             <li key={item.label}>
               <a
                 href={item.href}
-                className="hover:text-[rgb(251,146,60)] transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 hover:after:w-full after:bg-[rgb(251,146,60)] after:transition-all after:duration-300 text-white"
+                className="hover:text-sky-300 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 hover:after:w-full after:bg-sky-300 after:transition-all after:duration-300 text-white"
               >
                 {item.label}
               </a>
@@ -55,17 +59,20 @@ export function Header() {
           ))}
         </ul>
 
-        <a
-          href="#contact"
-          className={cn(
-            "hidden md:inline-flex items-center gap-2 text-sm px-5 py-2.5 transition-all duration-300",
-            scrolled
-              ? "bg-white text-foreground border border-foreground/20 hover:bg-foreground hover:text-white"
-              : "bg-white text-foreground border border-foreground/20 hover:bg-foreground hover:text-white",
-          )}
-        >
-          Связаться
-        </a>
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setLang(lang === "ru" ? "en" : "ru")}
+            className="text-sm text-white/70 hover:text-white transition-colors duration-300 font-medium tracking-wider border border-white/20 hover:border-white/50 px-3 py-1.5 rounded-sm"
+          >
+            {lang === "ru" ? "EN" : "RU"}
+          </button>
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 text-sm px-5 py-2.5 transition-all duration-300 bg-white text-foreground border border-foreground/20 hover:bg-foreground hover:text-white"
+          >
+            {t.nav.contact}
+          </a>
+        </div>
 
         <button
           className="md:hidden z-50 transition-colors duration-300 text-white"
@@ -94,17 +101,11 @@ export function Header() {
       >
         <div className="container mx-auto px-6">
           <ul className="flex flex-col gap-6 mb-8">
-            {[
-              { label: "Главная", href: "#hero" },
-              { label: "Философия", href: "#about" },
-              { label: "Проекты", href: "#projects" },
-              { label: "Услуги", href: "#services" },
-              { label: "Вопросы", href: "#faq" },
-            ].map((item) => (
+            {navItems.map((item) => (
               <li key={item.label}>
                 <a
                   href={item.href}
-                  className="hover:text-[rgb(251,146,60)] transition-colors duration-300 text-white text-4xl font-light block"
+                  className="hover:text-sky-300 transition-colors duration-300 text-white text-4xl font-light block"
                   onClick={closeMobileMenu}
                 >
                   {item.label}
@@ -113,13 +114,21 @@ export function Header() {
             ))}
           </ul>
 
-          <a
-            href="#contact"
-            className="inline-flex items-center justify-center gap-2 text-sm px-5 py-2.5 bg-white text-foreground border border-foreground/20 hover:bg-foreground hover:text-white transition-all duration-300 mb-4"
-            onClick={closeMobileMenu}
-          >
-            Связаться
-          </a>
+          <div className="flex items-center gap-4 mb-4">
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center gap-2 text-sm px-5 py-2.5 bg-white text-foreground border border-foreground/20 hover:bg-foreground hover:text-white transition-all duration-300"
+              onClick={closeMobileMenu}
+            >
+              {t.nav.contact}
+            </a>
+            <button
+              onClick={() => { setLang(lang === "ru" ? "en" : "ru"); closeMobileMenu() }}
+              className="text-sm text-white/70 hover:text-white transition-colors duration-300 font-medium tracking-wider border border-white/20 hover:border-white/50 px-3 py-2.5 rounded-sm"
+            >
+              {lang === "ru" ? "EN" : "RU"}
+            </button>
+          </div>
         </div>
       </div>
     </header>
